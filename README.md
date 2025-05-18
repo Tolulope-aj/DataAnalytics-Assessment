@@ -74,4 +74,4 @@ It gives a rough but useful estimate of each customer’s future potential value
 - **Zero-division errors**: In Q2 and Q4, I used `NULLIF()` in the denominator to safely avoid dividing by 0.
 - **Handling multiple product types**: It was important to distinguish between savings and investment products using fields like `is_a_fund`, `is_regular_savings`, and plan amounts.
 - **DateTime Format**: In Q3, after running my initial query, the last_transaction_date included both date and time, which wasn’t needed for the report.
-To fix this, I modified the query and used the DATE() function to extract only the date portion — so now it just shows something like 2025-05-18 instead of 2023-05-18 14:23:00.
+To fix this, I modified the query and used the DATE() function to extract only the date portion — so now it just shows something like 2025-05-18 instead of 2025-05-18 18:23:00.
