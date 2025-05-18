@@ -1,0 +1,35 @@
+Assessment_Q4.sql
+
+-- Assessment Q4
+--  For each customer, assuming the profit_per_transaction is 0.1% of the transaction value, calculate:
+-- Account tenure (months since signup)
+-- Total transactions
+-- Estimated CLV (Assume: CLV = (total_transactions / tenure) * 12 * avg_profit_per_transaction)
+-- Order by estimated CLV from highest to lowest
+
+WITH user_metrics AS (
+    SELECT 
+        u.id AS customer_id,
+		CONCAT(u.first_name, " ", u.last_name) AS name,
+        TIMESTAMPDIFF(MONTH, u.date_joined, CURRENT_DATE()) AS tenure_months,
+        COUNT(s.id) AS total_transactions,
+        SUM(s.confirmed_amount) / 100 AS total_transaction_value_naira
+    FROM users_customuser u
+    JOIN savings_savingsaccount s ON u.id = s.owner_id
+    GROUP BY u.id, name, u.date_joined
+),
+clv_calc AS (
+    SELECT 
+        customer_id,
+        full_name,
+        tenure_months,
+        total_transactions,
+        ROUND(
+            (total_transactions / NULLIF(tenure_months, 0)) * 12 * 
+            (0.001 * (total_transaction_value_naira / NULLIF(total_transactions, 0))),2
+        ) AS estimated_clv
+    FROM user_metrics
+)
+SELECT * 
+FROM clv_calc
+ORDER BY estimated_clv DESC;
